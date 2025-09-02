@@ -112,5 +112,5 @@ def test_graphs():
 if __name__ == "__main__":
     print("Running from graphing.py")
 
-    graph_linear_regression(118.526, 0.095)
+    graph_linear_regression(152.498, 25)
     plt.show()

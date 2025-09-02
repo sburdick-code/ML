@@ -8,7 +8,7 @@ import graphing, const
 
 def compute_cost(x, y, w, b):
     m = x.shape[0]
-    cost = 0
+    cost = np.float64(0)
 
     for i in range(m):
         f_wb = w * x[i] + b
@@ -42,8 +42,8 @@ def gradient_descent(
 ):
     J_history = []
     p_history = []
-    b = b_in
-    w = w_in
+    b = np.float64(b_in)
+    w = np.float64(w_in)
 
     for i in range(num_iters):
         dj_dw, dj_db = gradient_function(x, y, w, b)
@@ -57,9 +57,9 @@ def gradient_descent(
         # Print cost every at intervals 10 times or as many iterations if < 10
         if i % math.ceil(num_iters / 10) == 0:
             print(
-                f"Iteration {i:4}: Cost {J_history[-1]:0.2e} ",
-                f"dj_dw: {dj_dw: 0.3e}, dj_db: {dj_db: 0.3e}  ",
-                f"w: {w: 0.3e}, b: {b: 0.5e}",
+                f"Iteration {i:4}: Cost {J_history[-1]}\t",
+                f"dj_dw: {dj_dw:.5f},\t dj_db: {dj_db:.5f},\t",
+                f"w: {w:.5f},\t b: {b:.5f}",
             )
 
     return w, b, J_history, p_history
@@ -84,7 +84,7 @@ if __name__ == "__main__":
     w_init = 0
     b_init = 0
     iterations = 10000
-    tmp_alpha = np.float64(1.0e-10)
+    tmp_alpha = np.float64(1000.0e-10)
 
     w_final, b_final, J_hist, p_hist = gradient_descent(
         x_train,
