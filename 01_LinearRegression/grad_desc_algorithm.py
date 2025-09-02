@@ -21,8 +21,8 @@ def compute_cost(x, y, w, b):
 
 def compute_gradient(x, y, w, b):
     m = x.shape[0]
-    dj_dw = 0
-    dj_db = 0
+    dj_dw = np.float64(0)
+    dj_db = np.float64(0)
 
     for i in range(m):
         f_wb = w * x[i] + b
@@ -83,8 +83,8 @@ if __name__ == "__main__":
     x_train, y_train = get_training_data()
     w_init = 0
     b_init = 0
-    iterations = 20000
-    tmp_alpha = np.float64(2.0e-10)
+    iterations = 10000
+    tmp_alpha = np.float64(1.0e-10)
 
     w_final, b_final, J_hist, p_hist = gradient_descent(
         x_train,
@@ -103,3 +103,7 @@ if __name__ == "__main__":
     # print(f"p_hist: \t {p_hist}")
 
     graphing.graph_linear_regression(w_final, b_final)
+    graphing.graph_J(J_hist)
+    graphing.graph_p_hist(p_hist, J_hist)
+
+    plt.show()

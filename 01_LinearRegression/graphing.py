@@ -3,7 +3,6 @@
 #  + https://numpy.org/doc/
 
 import matplotlib.pyplot as plt
-import numpy as np
 import csv
 import const
 
@@ -44,7 +43,34 @@ def graph_linear_regression(w, b):
     ax.plot(x_test, y_pred, c="red", label="Model Prediction")
 
     ax.legend()
-    plt.show()
+
+
+def graph_J(J_hist):
+    fig, ax = plt.subplots()
+
+    ax.set_title("Cost Over Time")
+    ax.set_ylabel("cost")
+    ax.set_xlabel("iteration")
+
+    ax.plot(J_hist)
+
+
+def graph_p_hist(p_hist, J_hist):
+
+    w_hist = []
+    b_hist = []
+
+    for param in p_hist:
+        w_hist.append(param[0])
+        b_hist.append(param[1])
+
+    fig, axs = plt.subplots(2, 1, layout="constrained")
+
+    axs[0].set_title("J / w")
+    axs[0].plot(w_hist, J_hist, "x", c="green")
+
+    axs[1].set_title("J / b")
+    axs[1].plot(b_hist, J_hist, "x", c="green")
 
 
 # Testing purposes only
@@ -84,4 +110,7 @@ def test_graphs():
 
 
 if __name__ == "__main__":
-    graph_linear_regression(118.5264873504491, 0.0954029565126554)
+    print("Running from graphing.py")
+
+    graph_linear_regression(118.526, 0.095)
+    plt.show()
