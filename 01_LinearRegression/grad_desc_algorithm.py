@@ -1,5 +1,9 @@
 import matplotlib.pyplot as plt
+import numpy as np
+import math
 import csv
+
+import graphing, const
 
 
 def compute_cost(x, y, w, b):
@@ -50,31 +54,37 @@ def gradient_descent(
             J_history.append(cost_function(x, y, w, b))
             p_history.append([w, b])
 
+        # Print cost every at intervals 10 times or as many iterations if < 10
+        if i % math.ceil(num_iters / 10) == 0:
+            print(
+                f"Iteration {i:4}: Cost {J_history[-1]:0.2e} ",
+                f"dj_dw: {dj_dw: 0.3e}, dj_db: {dj_db: 0.3e}  ",
+                f"w: {w: 0.3e}, b: {b: 0.5e}",
+            )
+
     return w, b, J_history, p_history
 
 
-def get_training_data(file_path):
-
+def get_training_data():
     x = []
     y = []
 
-    with open(file_path, "r") as f:
+    with open(const.training_set, "r") as f:
         reader = csv.DictReader(f)
 
         for row in reader:
             x.append(int(row["1stFlrSF"]))
             y.append(int(row["SalePrice"]))
 
-    return x, y
+    return np.array(x), np.array(y)
 
 
 if __name__ == "__main__":
-    data_set = "TrainingSets\LinearRegression\Set_01\HousingPrices_train.csv"
-    x_train, y_train = get_training_data(data_set)
+    x_train, y_train = get_training_data()
     w_init = 0
     b_init = 0
-    iterations = 10000
-    tmp_alpha = 1.0e-2
+    iterations = 20000
+    tmp_alpha = np.float64(2.0e-10)
 
     w_final, b_final, J_hist, p_hist = gradient_descent(
         x_train,
@@ -89,5 +99,7 @@ if __name__ == "__main__":
 
     print(f"w:      \t {w_final}")
     print(f"b:      \t {b_final}")
-    print(f"J_hist: \t {J_hist}")
-    print(f"p_hist: \t {p_hist}")
+    # print(f"J_hist: \t {J_hist}")
+    # print(f"p_hist: \t {p_hist}")
+
+    graphing.graph_linear_regression(w_final, b_final)

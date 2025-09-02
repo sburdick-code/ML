@@ -5,29 +5,43 @@
 import matplotlib.pyplot as plt
 import numpy as np
 import csv
+import const
 
-file_path = "TrainingSets\LinearRegression\Set_01\HousingPrices_train.csv"
 
-if __name__ == "__main__":
+def graph_linear_regression(w, b):
     """
     For graphing the training set
     """
 
-    x = []
-    y = []
+    x_train = []
+    y_train = []
+    x_test = []
+    y_pred = []
 
-    with open(file_path, mode="r") as file:
+    # Get Training Data
+    with open(const.training_set, mode="r") as file:
         reader = csv.DictReader(file)
 
         for row in reader:
-            x.append(int(row["1stFlrSF"]))
-            y.append(int(row["SalePrice"]))
+            x_train.append(int(row["1stFlrSF"]))
+            y_train.append(int(row["SalePrice"]))
+
+    # Get Test Data
+    with open(const.test_set, "r") as file:
+        reader = csv.DictReader(file)
+
+        for row in reader:
+            x_i = int(row["1stFlrSF"])
+            x_test.append(x_i)
+            f_wb = w * x_i + b
+            y_pred.append(f_wb)
 
     fig, ax = plt.subplots()
     ax.set_xlabel("1st Floor SqFt")
     ax.set_ylabel("Sale Price")
 
-    ax.plot(x, y, "x", c="red", label="Training Set")
+    ax.plot(x_train, y_train, "x", c="blue", label="Training Set")
+    ax.plot(x_test, y_pred, c="red", label="Model Prediction")
 
     ax.legend()
     plt.show()
@@ -67,3 +81,7 @@ def test_graphs():
 
     ax.legend()
     plt.show()
+
+
+if __name__ == "__main__":
+    graph_linear_regression(118.5264873504491, 0.0954029565126554)
