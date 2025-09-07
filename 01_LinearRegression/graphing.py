@@ -18,7 +18,7 @@ def graph_linear_regression(w, b):
     y_pred = []
 
     # Get Training Data
-    with open(const.training_set, mode="r") as file:
+    with open(const.TRAINING_SET, mode="r") as file:
         reader = csv.DictReader(file)
 
         for row in reader:
@@ -26,7 +26,7 @@ def graph_linear_regression(w, b):
             y_train.append(int(row["SalePrice"]))
 
     # Get Test Data
-    with open(const.test_set, "r") as file:
+    with open(const.TEST_SET, "r") as file:
         reader = csv.DictReader(file)
 
         for row in reader:

@@ -1,5 +1,5 @@
-import matplotlib.pyplot as plt
 import numpy as np
+import matplotlib.pyplot as plt
 import math
 import csv
 
@@ -7,22 +7,22 @@ import graphing, const
 
 
 def compute_cost(x, y, w, b):
-    m = x.shape[0]
-    cost = np.float64(0)
+    m = len(x)
+    cost = np.float32(0)
 
     for i in range(m):
         f_wb = w * x[i] + b
         cost += (f_wb - y[i]) ** 2
 
-    total_cost = 1 / (2 * m) * cost
+    total_cost = cost / (2 * m)
 
     return total_cost
 
 
 def compute_gradient(x, y, w, b):
-    m = x.shape[0]
-    dj_dw = np.float64(0)
-    dj_db = np.float64(0)
+    m = len(x)
+    dj_dw = np.float32(0)
+    dj_db = np.float32(0)
 
     for i in range(m):
         f_wb = w * x[i] + b
@@ -31,38 +31,43 @@ def compute_gradient(x, y, w, b):
         dj_dw += dj_dw_i
         dj_db += dj_db_i
 
-    dj_dw = dj_dw / m
-    dj_db = dj_db / m
+    dj_dw /= m
+    dj_db /= m
 
     return dj_dw, dj_db
 
 
 def gradient_descent(
-    x, y, w_in, b_in, alpha, num_iters, cost_function, gradient_function
+    x_train,
+    y_train,
+    w_init,
+    b_init,
+    num_iters,
+    alpha,
+    cost_function,
+    gradient_function,
 ):
-    J_history = []
-    p_history = []
-    b = np.float64(b_in)
-    w = np.float64(w_in)
+
+    w = w_init
+    b = b_init
+    cost = np.float64(0)
 
     for i in range(num_iters):
-        dj_dw, dj_db = gradient_function(x, y, w, b)
-        b = b - alpha * dj_db
-        w = w - alpha * dj_dw
+        dj_dw, dj_db = gradient_function(x_train, y_train, w, b)
+        tmp_w = w - alpha * dj_dw
+        tmp_b = b - alpha * dj_db
 
-        if i < 100000:
-            J_history.append(cost_function(x, y, w, b))
-            p_history.append([w, b])
+        w = tmp_w
+        b = tmp_b
 
-        # Print cost every at intervals 10 times or as many iterations if < 10
+        if i < 100000:  # Keep memory safe :O
+            J_hist.append(cost_function(x_train, y_train, w, b))
+            p_hist.append([w, b])
+
         if i % math.ceil(num_iters / 10) == 0:
-            print(
-                f"Iteration {i:4}: Cost {J_history[-1]}\t",
-                f"dj_dw: {dj_dw:.5f},\t dj_db: {dj_db:.5f},\t",
-                f"w: {w:.5f},\t b: {b:.5f}",
-            )
+            print(f"Iteration: {i:4},\t Cost: {J_hist[-1]},\t w: {w:.5f}, b: {b:.5f}")
 
-    return w, b, J_history, p_history
+    return w, b, J_hist, p_hist
 
 
 def get_training_data():
@@ -81,26 +86,26 @@ def get_training_data():
 
 if __name__ == "__main__":
     x_train, y_train = get_training_data()
-    w_init = 0
-    b_init = 0
+    w_init = np.float64(0)
+    b_init = np.float64(0)
+    J_hist = []
+    p_hist = []
     iterations = 10000
-    tmp_alpha = np.float64(1000.0e-10)
+    alpha = np.float64(1.0e-10)
 
     w_final, b_final, J_hist, p_hist = gradient_descent(
         x_train,
         y_train,
         w_init,
         b_init,
-        tmp_alpha,
         iterations,
+        alpha,
         compute_cost,
         compute_gradient,
     )
 
     print(f"w:      \t {w_final}")
     print(f"b:      \t {b_final}")
-    # print(f"J_hist: \t {J_hist}")
-    # print(f"p_hist: \t {p_hist}")
 
     graphing.graph_linear_regression(w_final, b_final)
     graphing.graph_J(J_hist)
