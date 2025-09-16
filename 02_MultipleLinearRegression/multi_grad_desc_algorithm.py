@@ -5,6 +5,7 @@ import math
 import copy
 
 import const, graphing
+from get_scaled_features import get_training_data
 
 
 def compute_cost(X, y, w, b):
@@ -63,33 +64,33 @@ def gradient_descent(
     return w, b, J_hist, p_hist
 
 
-def get_training_data():
+# def get_training_data():
 
-    X = []
-    y = []
+#     X = []
+#     y = []
 
-    with open(const.TRAINING_SET, "r") as f:
-        reader = csv.DictReader(f)
+#     with open(const.TRAINING_SET, "r") as f:
+#         reader = csv.DictReader(f)
 
-        for row in reader:
-            x_set = [
-                int(row["1stFlrSF"]),
-                int(row["YearBuilt"]),
-                int(row["OverallCond"]),
-            ]
-            X.append(x_set)
-            y.append(int(row["SalePrice"]))
+#         for row in reader:
+#             x_set = [
+#                 int(row["1stFlrSF"]),
+#                 int(row["YearBuilt"]),
+#                 int(row["OverallCond"]),
+#             ]
+#             X.append(x_set)
+#             y.append(int(row["SalePrice"]))
 
-    return np.array(X), np.array(y)
+#     return np.array(X), np.array(y)
 
 
 if __name__ == "__main__":
     X_train, y_train = get_training_data()
     m, n = X_train.shape
-    w_init = np.array([34.0, 78.0, 0.2])
-    b_init = np.float64(0.03)
+    w_init = np.array([34.43899115, 79.60193739, 1.20144644])
+    b_init = np.float64(1.65769)
     iterations = 100000
-    alpha_init = np.float64(10.0e-10)
+    alpha_init = np.float64(100.0e-10)
 
     w_final, b_final, J_hist, p_hist = gradient_descent(
         X_train,
