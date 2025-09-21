@@ -5,7 +5,7 @@ import math
 import copy
 
 import const, graphing
-from get_scaled_features import get_training_data
+from get_scaled_features import get_training_data, Z_normalize_data
 
 
 def compute_cost(X, y, w, b):
@@ -64,36 +64,17 @@ def gradient_descent(
     return w, b, J_hist, p_hist
 
 
-# def get_training_data():
-
-#     X = []
-#     y = []
-
-#     with open(const.TRAINING_SET, "r") as f:
-#         reader = csv.DictReader(f)
-
-#         for row in reader:
-#             x_set = [
-#                 int(row["1stFlrSF"]),
-#                 int(row["YearBuilt"]),
-#                 int(row["OverallCond"]),
-#             ]
-#             X.append(x_set)
-#             y.append(int(row["SalePrice"]))
-
-#     return np.array(X), np.array(y)
-
-
 if __name__ == "__main__":
     X_train, y_train = get_training_data()
+    X_norm = Z_normalize_data(X_train)
     m, n = X_train.shape
-    w_init = np.array([34.43899115, 79.60193739, 1.20144644])
-    b_init = np.float64(1.65769)
-    iterations = 100000
-    alpha_init = np.float64(100.0e-10)
+    w_init = np.array([const.W1_INIT, const.W2_INIT, const.W3_INIT])
+    b_init = np.float64(const.B_INIT)
+    iterations = const.NUM_ITERATIONS
+    alpha_init = np.float64(const.ALPHA_INIT)
 
     w_final, b_final, J_hist, p_hist = gradient_descent(
-        X_train,
+        X_norm,
         y_train,
         w_init,
         b_init,
@@ -107,5 +88,6 @@ if __name__ == "__main__":
 
     graphing.graph_linear_regression(w_final, b_final)
     graphing.graph_J(J_hist)
+    # graphing.graph_p_hist(p_hist, J_hist)
 
     plt.show()

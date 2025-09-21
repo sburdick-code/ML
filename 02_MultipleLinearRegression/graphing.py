@@ -6,6 +6,7 @@ import matplotlib.pyplot as plt
 import csv
 import const
 import numpy as np
+from get_scaled_features import Z_normalize_data
 
 
 def graph_linear_regression(w, b):
@@ -15,7 +16,7 @@ def graph_linear_regression(w, b):
 
     x_train = []
     y_train = []
-    x_test = []
+    X_test = []
     y_pred = []
 
     x_train_0 = []
@@ -44,28 +45,28 @@ def graph_linear_regression(w, b):
             x_test_0.append(int(row["1stFlrSF"]))
             x_test_1.append(int(row["YearBuilt"]))
             x_test_2.append(int(row["OverallCond"]))
-            x_test = np.array([x_test_0[-1], x_test_1[-1], x_test_2[-1]])
+            X_test.append([x_test_0[-1], x_test_1[-1], x_test_2[-1]])
 
-            f_wb = np.dot(x_test, w) + b
-            y_pred.append(f_wb)
+    X_norm = Z_normalize_data(np.array(X_test))
+    f_wb = np.dot(X_norm, w) + b
 
     fig, axs = plt.subplots(3, 1, layout="constrained")
     axs[0].set_xlabel("1st Floor sqft")
     axs[0].set_ylabel("Sale Price")
     axs[0].plot(x_train_0, y_train, "x", c="blue", label="Training Set")
-    axs[0].plot(x_test_0, y_pred, "x", c="red", label="Model Prediction")
+    axs[0].plot(x_test_0, f_wb, "x", c="red", label="Model Prediction")
     axs[0].legend()
 
     axs[1].set_xlabel("Year Built")
     axs[1].set_ylabel("Sale Price")
     axs[1].plot(x_train_1, y_train, "x", c="blue", label="Training Set")
-    axs[1].plot(x_test_1, y_pred, "x", c="red", label="Model Prediction")
+    axs[1].plot(x_test_1, f_wb, "x", c="red", label="Model Prediction")
     axs[1].legend()
 
     axs[2].set_xlabel("Overall Condition")
     axs[2].set_ylabel("Sale Price")
     axs[2].plot(x_train_2, y_train, "x", c="blue", label="Training Set")
-    axs[2].plot(x_test_2, y_pred, "x", c="red", label="Model Prediction")
+    axs[2].plot(x_test_2, f_wb, "x", c="red", label="Model Prediction")
     axs[2].legend()
 
 
